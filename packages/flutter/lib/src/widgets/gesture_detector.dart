@@ -265,6 +265,7 @@ class GestureDetector extends StatelessWidget {
     this.behavior,
     this.excludeFromSemantics = false,
     this.dragStartBehavior = DragStartBehavior.start,
+    this.kSlop,
   }) : assert(excludeFromSemantics != null),
        assert(dragStartBehavior != null),
        assert(() {
@@ -299,6 +300,8 @@ class GestureDetector extends StatelessWidget {
   ///
   /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget? child;
+
+  final double? kSlop;
 
   /// A pointer that might cause a tap with a primary button has contacted the
   /// screen at a particular location.
@@ -876,7 +879,7 @@ class GestureDetector extends StatelessWidget {
         onPanEnd != null ||
         onPanCancel != null) {
       gestures[PanGestureRecognizer] = GestureRecognizerFactoryWithHandlers<PanGestureRecognizer>(
-        () => PanGestureRecognizer(debugOwner: this),
+        () => PanGestureRecognizer(debugOwner: this, kSlop: kSlop),
         (PanGestureRecognizer instance) {
           instance
             ..onDown = onPanDown
@@ -891,7 +894,7 @@ class GestureDetector extends StatelessWidget {
 
     if (onScaleStart != null || onScaleUpdate != null || onScaleEnd != null) {
       gestures[ScaleGestureRecognizer] = GestureRecognizerFactoryWithHandlers<ScaleGestureRecognizer>(
-        () => ScaleGestureRecognizer(debugOwner: this),
+        () => ScaleGestureRecognizer(debugOwner: this, kSlop: kSlop),
         (ScaleGestureRecognizer instance) {
           instance
             ..onStart = onScaleStart

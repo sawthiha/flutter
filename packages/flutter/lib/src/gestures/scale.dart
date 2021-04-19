@@ -252,6 +252,7 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
     Object? debugOwner,
     PointerDeviceKind? kind,
     this.dragStartBehavior = DragStartBehavior.down,
+    this.kSlop,
   }) : assert(dragStartBehavior != null),
        super(debugOwner: debugOwner, kind: kind);
 
@@ -313,6 +314,9 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
   late Map<int, Offset> _pointerLocations;
   late List<int> _pointerQueue; // A queue to sort pointers in order of entrance
   final Map<int, VelocityTracker> _velocityTrackers = <int, VelocityTracker>{};
+
+  // Recognizer specific kSlop in case to define scale and pan sensitivity
+  final double? kSlop;
 
   double get _scaleFactor => _initialSpan > 0.0 ? _currentSpan / _initialSpan : 1.0;
 
@@ -478,7 +482,7 @@ class ScaleGestureRecognizer extends OneSequenceGestureRecognizer {
     if (_state == _ScaleState.possible) {
       final double spanDelta = (_currentSpan - _initialSpan).abs();
       final double focalPointDelta = (_currentFocalPoint - _initialFocalPoint).distance;
-      if (spanDelta > computeScaleSlop(pointerDeviceKind) || focalPointDelta > computePanSlop(pointerDeviceKind))
+      if (spanDelta > (kSlop ?? computeScaleSlop(pointerDeviceKind)) || focalPointDelta > (kSlop ??computePanSlop(pointerDeviceKind)))
         resolve(GestureDisposition.accepted);
     } else if (_state.index >= _ScaleState.accepted.index) {
       resolve(GestureDisposition.accepted);

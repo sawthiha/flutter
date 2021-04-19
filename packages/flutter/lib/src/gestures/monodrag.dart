@@ -584,7 +584,10 @@ class HorizontalDragGestureRecognizer extends DragGestureRecognizer {
 ///    some time has passed.
 class PanGestureRecognizer extends DragGestureRecognizer {
   /// Create a gesture recognizer for tracking movement on a plane.
-  PanGestureRecognizer({ Object? debugOwner }) : super(debugOwner: debugOwner);
+  PanGestureRecognizer({ Object? debugOwner , this.kSlop}) : super(debugOwner: debugOwner);
+
+  // kSlop value to define sensitivity of a pan gesture recognizer
+  final double? kSlop;
 
   @override
   bool isFlingGesture(VelocityEstimate estimate, PointerDeviceKind kind) {
@@ -596,7 +599,7 @@ class PanGestureRecognizer extends DragGestureRecognizer {
 
   @override
   bool _hasSufficientGlobalDistanceToAccept(PointerDeviceKind pointerDeviceKind) {
-    return _globalDistanceMoved.abs() > computePanSlop(pointerDeviceKind);
+    return _globalDistanceMoved.abs() > (kSlop ?? computePanSlop(pointerDeviceKind));
   }
 
   @override
